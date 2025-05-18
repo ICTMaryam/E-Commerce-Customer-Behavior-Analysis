@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.10.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.10.000" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.10.000" expanded="true" height="68" name="Retrieve New_E-commerce_Customer_Data" width="90" x="112" y="34">
+        <parameter key="repository_entry" value="//Local Repository/data/New_E-commerce_Customer_Data"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="9.10.000" expanded="true" height="82" name="Set Role" width="90" x="246" y="34">
+        <parameter key="attribute_name" value="Gender"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="9.10.000" expanded="true" height="82" name="Sample" width="90" x="380" y="34">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="balance_data" value="false"/>
+        <parameter key="sample_size" value="10000"/>
+        <parameter key="sample_ratio" value="0.1"/>
+        <parameter key="sample_probability" value="0.1"/>
+        <list key="sample_size_per_class"/>
+        <list key="sample_ratio_per_class"/>
+        <list key="sample_probability_per_class"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="concurrency:parallel_random_forest" compatibility="9.10.000" expanded="true" height="103" name="Random Forest" width="90" x="514" y="34">
+        <parameter key="number_of_trees" value="100"/>
+        <parameter key="criterion" value="gain_ratio"/>
+        <parameter key="maximal_depth" value="10"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="confidence" value="0.1"/>
+        <parameter key="apply_prepruning" value="false"/>
+        <parameter key="minimal_gain" value="0.01"/>
+        <parameter key="minimal_leaf_size" value="2"/>
+        <parameter key="minimal_size_for_split" value="4"/>
+        <parameter key="number_of_prepruning_alternatives" value="3"/>
+        <parameter key="random_splits" value="false"/>
+        <parameter key="guess_subset_ratio" value="true"/>
+        <parameter key="subset_ratio" value="0.2"/>
+        <parameter key="voting_strategy" value="confidence vote"/>
+        <parameter key="use_local_random_seed" value="false"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="9.10.000" expanded="true" height="68" name="Retrieve New_E-commerce_Customer_Data (2)" width="90" x="313" y="187">
+        <parameter key="repository_entry" value="//Local Repository/data/New_E-commerce_Customer_Data"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="9.10.000" expanded="true" height="82" name="Apply Model" width="90" x="715" y="187">
+        <list key="application_parameters"/>
+        <parameter key="create_view" value="false"/>
+      </operator>
+      <connect from_op="Retrieve New_E-commerce_Customer_Data" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Sample" to_port="example set input"/>
+      <connect from_op="Sample" from_port="example set output" to_op="Random Forest" to_port="training set"/>
+      <connect from_op="Random Forest" from_port="model" to_op="Apply Model" to_port="model"/>
+      <connect from_op="Random Forest" from_port="weights" to_port="result 3"/>
+      <connect from_op="Retrieve New_E-commerce_Customer_Data (2)" from_port="output" to_op="Apply Model" to_port="unlabelled data"/>
+      <connect from_op="Apply Model" from_port="labelled data" to_port="result 1"/>
+      <connect from_op="Apply Model" from_port="model" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>

@@ -9,14 +9,23 @@ and ultimately improve the overall business performance.
 
 The following key activities will be focused upon:
 
+
   •	Data Cleaning: 
+  
 Handling missing values, removing redundant data, and detecting outliers.
+
    •	Data Transformation: 
+   
 Normalizing data and converting it into the required formats.
+
    •	Dimensionality Reduction: 
+   
 Applying techniques such as Principal Component Analysis (PCA) to reduce the number of attributes.
+
   •	Data Integration: 
+  
 The process of combining data from a variety of sources into a unified perspective (Not part of this project).
+
 
 
 We will employ the RapidMiner Studio in this phase, leveraging its advanced pre-processing operators and visualization capabilities. 
